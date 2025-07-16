@@ -1,14 +1,19 @@
-const CORS_PROXY = 'https://corsproxy.io/?';
-const IMAGE_BASE = 'https://ddragon.leagueoflegends.com/cdn/15.13.1/img/item/';
-const DATA_URL = 'https://ddragon.leagueoflegends.com/cdn/15.13.1/data/en_US/item.json';
-const PROXIED_URL = `${CORS_PROXY}${encodeURIComponent(DATA_URL)}`;
+// Date: 2025-16-07
+// Version: 01.01.1
+// This program fetches and displays League of Legends items for Ornn
+// 
+// ------------------------- SCRIPT LOGIC ---------------------------------
 
+
+// Utility function to decode HTML entities
 function decodeHTML(html) {
   const txt = document.createElement('textarea');
   txt.innerHTML = html;
   return txt.value;
 }
 
+// Function to extract and clean item descriptions
+// It processes the raw HTML to extract stats, passives, and active attributes
 function extractCleanDescription(rawHtml) {
   const html = decodeHTML(rawHtml);
 
@@ -56,9 +61,17 @@ function stripTags(str) {
   return str.replace(/<\/?[^>]+>/g, '');
 }
 
-async function fetchItems() {
+// Function to fetch items from the API
+// It filters items based on specific criteria
+
+async function fetchItems(version) {
+  const CORS_PROXY = 'https://corsproxy.io/?';
+  const IMAGE_BASE = `https://ddragon.leagueoflegends.com/cdn/${version}/img/item/`;
+  const DATA_URL = `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/item.json`;
+  const PROXIED_URL = `${CORS_PROXY}${encodeURIComponent(DATA_URL)}`;
+
   try {
-    const res = await fetch(PROXIED_URL);
+    const res = await fetch(DATA_URL);
     const json = await res.json();
     const items = json.data;
 
@@ -74,7 +87,7 @@ async function fetchItems() {
     const filteredItems = {};
 
     for (const [id, item] of Object.entries(items)) {
-       const {
+      const {
         maps,
         gold,
         depth,
@@ -83,13 +96,18 @@ async function fetchItems() {
         plaintext,
         tags,
         stats
-    } = item;
+      } = item;
 
-    const last4 = id.slice(-4);
-    if (id.length > 4 && baseIDs.has(last4)) {
+      const last4 = id.slice(-4);
+      if (id.length > 4 && baseIDs.has(last4)) {
         continue; // Skip duplicate
-    }
+      }
 
+      // Filter items based on specific criteria
+      // 1. Must be purchasable (gold.purchasable)
+      // 2. Must be from Summoner's Rift (maps["11"])
+      // 3. Must be at depth 3 (depth === 3)
+      // 4. Must not be a type of Boots (tags.includes("Boots") === false)
       if (
         maps?.["11"] && // Summoner's Rift
         gold?.purchasable &&
@@ -117,6 +135,10 @@ async function fetchItems() {
     console.error('Error fetching or parsing items:', err);
   }
 }
+
+
+// Function to display items in the HTML
+// It creates two columns: original and adjusted
 
 function displayItems(items) {
   const container = document.getElementById('item-container');
@@ -180,7 +202,6 @@ function displayItems(items) {
     adjustedCol.innerHTML = `
       <h2>${item.name}<br>*Masterwork*</h2>
       <img src="${item.image}" alt="${item.name}">
-      <p>(awaiting formula)</p>
 
       ${item.plaintext
         ? `<p><em>${item.plaintext}</em></p>`
@@ -228,4 +249,20 @@ function displayItems(items) {
   });
 }
 
-fetchItems();
+// ###############################
+// #### Main script execution ####
+// ###############################
+
+document.addEventListener('DOMContentLoaded', () => {
+  const versionSelect = document.getElementById('version-select');
+
+  let currentVersion = versionSelect.value;
+
+  versionSelect.addEventListener('change', async () => {
+    currentVersion = versionSelect.value;
+    await fetchItems(currentVersion);
+  });
+
+  fetchItems(currentVersion); // Initial load
+});
+

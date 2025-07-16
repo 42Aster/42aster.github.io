@@ -7,7 +7,28 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Ornn Items Dashboard</h1>
+  <header class="default">
+    <div class="page-header">
+      <h1>Ornn Items Dashboard</h1>
+      <div class="version-selector">
+        <label for="version-select">Version:</label>
+        <select id="version-select" name="version">
+          <option value="15.13.1" selected>15.13.1</option>
+          <option value="15.12.1">15.12.1</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="default">
+    <h2>Living forge (Ornn's passive)</h2>
+    <p class="passive-description">
+      Ornn can upgrade most Legendary items that he and his teammates own into Masterwork items, 
+      increasing the gold value of all upgradeable stats by exactly 1000 Gold, shared equally among them. Ornn can upgrade the <strong>first eligible Legendary item in an allied 
+      champion's inventory</strong> into its Masterwork variant for each <strong>level after 13 and before 18</strong> (total of 4, once per ally per game). He can do so by selecting 
+      the ally while within 600 range and by performing <em>Living Forge's</em> channel.
+    </p>
+  </div>
 
   <div class="layout">
     <div class="side-column" id="left-column"></div>
