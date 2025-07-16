@@ -19,10 +19,10 @@ The items are filtered using multiple attributes:
 ## To do
 
 - [x] Loading items and images from enpoints
-- [ ] Checking if there are only the right items
+- [ ] Checking if there are only items eligible for upgrade
 - [x] Formatting the stats + making sure the stats are correct
-- [ ] Masterwork item image differentiation 
-- [ ] Implementing the formula for masterwork items
+- [x] Masterwork item image differentiation 
+- [x] Implementing the formula for masterwork items
 
 
 
