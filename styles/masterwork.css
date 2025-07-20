@@ -2,7 +2,6 @@
   position: relative;
   width: 64px;
   height: 64px;
-  overflow: hidden;
 }
 
 .corrupt-image {
@@ -10,21 +9,16 @@
   height: 64px;
   object-fit: cover;
   display: block;
+  position: relative;
+  z-index: 1;
 }
 
-.corrupt-overlay {
+.frame-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 64px;
   height: 64px;
+  z-index: 2;
   pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0.75;
-  animation: pulseVeins 2s infinite ease-in-out;
-}
-
-@keyframes pulseVeins {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 0.9; }
 }
